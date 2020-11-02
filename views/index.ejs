@@ -1,2 +1,7 @@
 <!-- Paso de parámetros entre servidor y vista -->
 <h1>Hola <%=name%></h1>
+
+<!-- Nos aseguramos que el metodo sea delete -->
+<form action="/logout?_method=DELETE" method="POST">
+    <button type="submit">Cerrar sesión</button>
+</form>

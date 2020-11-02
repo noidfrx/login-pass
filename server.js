@@ -8,15 +8,15 @@ const express = require('express')
 const app = express()
 //Usamos bcrypt para manejo de contraseñas seguras instalado por > npm i bcrypt
 const bcrypt = require('bcrypt')
+//Se importa sola passport
+const passport = require('passport')
 //Usamos passport para autenticación >npm i passport passport-local express-session express-flash
 const flash = require('express-flash')
 //Para manejo de sesiones
 const session = require('express-session')
+//Para que funcione app.delete con formulario instalamos >npm i method-override
+const methodOverride = require('method-override')
 
-
-
-//Se importa sola passport
-const passport = require('passport')
 
 //Pedimos función de archivo de passport
 const initializePassport = require('./passport-config')
@@ -49,29 +49,31 @@ app.use(session({
 }))
 app.use(passport.initialize())
 app.use(passport.session())
+app.use(methodOverride('_method'))
 
-//RUTAS
-app.get('/', (req, res)=>{
-    res.render('index.ejs', {name:'Edu'})
+//RUTAS, mostramos index solamente si está autenticado
+app.get('/', checkAuthenticated, (req, res)=>{
+    res.render('index.ejs', {name:req.user.name})
 })
 
-app.get('/login', (req, res)=>{
+
+app.get('/login',checkNotAuthenticated, (req, res)=>{
     res.render('login.ejs')
 })
 
 //Para paso de parámetros con POST
-app.post('/login', passport.authenticate('local', {
+app.post('/login',checkNotAuthenticated, passport.authenticate('local', {
     successRedirect: '/',
     failureRedirect: '/login',
     failureFlash: true
 }))
 
-app.get('/register', (req, res)=>{
+app.get('/register',checkNotAuthenticated, (req, res)=>{
     res.render('register.ejs')
 })
 
 //Para paso de parámetros con POST
-app.post('/register', async (req, res)=>{
+app.post('/register',checkNotAuthenticated, async (req, res)=>{
     //Intentaremos registrar un usuario
     try{
         const hashedPassword = await bcrypt.hash(req.body.password, 10)
@@ -91,5 +93,35 @@ app.post('/register', async (req, res)=>{
     }
     console.log(users)
 })
+
+//Para que funcione con formulario instalamos. Para que podamos usar delete en forms >npm i method-override
+app.delete('/logout', (req,res)=> {
+    req.logOut()
+    res.redirect('/login')
+})
+
+
+//FUNCIONES
+
+//Para comprobar usuarios logueados
+function checkAuthenticated(req, res, next){
+    if(req.isAuthenticated()){
+        return next()
+    }
+
+    //Si no está autenticado se va al login
+    res.redirect('login')
+}
+
+//Para comprobar usuarios no logueados
+function checkNotAuthenticated(req, res, next){
+    if(req.isAuthenticated()){
+        //Si está se va a home
+        return res.redirect('/')
+    }
+
+    //Si no está autenticado se va, Se usa en login, registro
+    next()
+}
 
 app.listen(3000)
