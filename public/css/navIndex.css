@@ -1,0 +1,17 @@
+nav{
+    border-bottom: 3px solid gray;
+    background-color: #f9d3f2;
+}
+
+#logo{
+    background-color: gray;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 5px;
+    color:white;
+    font-weight: bolder;
+    font-size: 20px;
+}
+#logo img{
+    width: 70px;
+}

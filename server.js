@@ -6,15 +6,18 @@ if(process.env.NODE_ENV !== 'production'){
 
 const express = require('express')
 const app = express()
-//Usamos bcrypt para manejo de contraseñas seguras instalado por > npm i bcrypt
+//Usamos bcrypt para manejo de contraseñas seguras instalado por
+//> npm i bcrypt
 const bcrypt = require('bcrypt')
 //Se importa sola passport
 const passport = require('passport')
-//Usamos passport para autenticación >npm i passport passport-local express-session express-flash
+//Usamos passport para autenticación
+//>npm i passport passport-local express-session express-flash
 const flash = require('express-flash')
 //Para manejo de sesiones
 const session = require('express-session')
-//Para que funcione app.delete con formulario instalamos >npm i method-override
+//Para que funcione app.delete con formulario instalamos
+//>npm i method-override
 const methodOverride = require('method-override')
 
 
@@ -50,15 +53,19 @@ app.use(session({
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(methodOverride('_method'))
+app.use('/public', express.static( 'public' ) );
 
 //RUTAS, mostramos index solamente si está autenticado
 app.get('/', checkAuthenticated, (req, res)=>{
-    res.render('index.ejs', {name:req.user.name})
+    res.render('home.ejs', {name:req.user.name})
 })
-
 
 app.get('/login',checkNotAuthenticated, (req, res)=>{
     res.render('login.ejs')
+})
+
+app.get('/index',checkNotAuthenticated, (req, res)=>{
+    res.render('index.ejs')
 })
 
 //Para paso de parámetros con POST
@@ -97,7 +104,7 @@ app.post('/register',checkNotAuthenticated, async (req, res)=>{
 //Para que funcione con formulario instalamos. Para que podamos usar delete en forms >npm i method-override
 app.delete('/logout', (req,res)=> {
     req.logOut()
-    res.redirect('/login')
+    res.redirect('/index')
 })
 
 
@@ -110,7 +117,7 @@ function checkAuthenticated(req, res, next){
     }
 
     //Si no está autenticado se va al login
-    res.redirect('login')
+    res.redirect('/index')
 }
 
 //Para comprobar usuarios no logueados
@@ -125,3 +132,4 @@ function checkNotAuthenticated(req, res, next){
 }
 
 app.listen(3000)
+console.log("Servidor funcionado en http://localhost:3000")

@@ -1,7 +1,60 @@
-<!-- Paso de parámetros entre servidor y vista -->
-<h1>Hola <%=name%></h1>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Feedbakh</title>
 
-<!-- Nos aseguramos que el metodo sea delete -->
-<form action="/logout?_method=DELETE" method="POST">
-    <button type="submit">Cerrar sesión</button>
-</form>
+    <link rel="icon" type="image/x-icon" href="assets/logo_feedbakh.png" />
+
+    <!-- BOOTSTRAP MINT -->
+    <link
+      rel="stylesheet"
+      href="https://bootswatch.com/4/minty/bootstrap.min.css"
+    />
+    <link href="/public/css/index.css" rel="stylesheet" type="text/css" />
+
+    <!-- CDN FONTAWESOME -->
+    <script
+      src="https://kit.fontawesome.com/5e790c6c97.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+
+  <body>
+    <nav><%- include('../partials/navindex'); %></nav>
+    <div class="row" style="width: 100%">
+      <div class="col-md-7">
+        <h1 class="text-center">FEEDBAKH</h1>
+        <p class="col-md-8 offset-md-2 text-center">
+          Organiza todo en un mismo lugar y permite que colaboren contigo.
+        </p>
+
+        <form action="/register" method="GET">
+          <button
+            type="submit"
+            class="btn col-md-4 offset-md-4 pt-4 pb-4"
+            id="registrate"
+          >
+            Regístrate ahora
+          </button>
+        </form>
+
+        <div class="offset-md-2 pt-3">
+          <p><i class="fas fa-check"></i> Todas tus tareas en un solo lugar</p>
+          <p><i class="fas fa-check"></i> Crea tus propios equipos</p>
+          <p>
+            <i class="fas fa-check"></i> Conecta con tus amigos y compañeros de
+            trabajo
+          </p>
+        </div>
+      </div>
+      <div class="col-md-5 pt-5">
+        <div class="text-center">
+          <img src="../public/assets/logo_feedbakh.png" class="card-img-top" />
+        </div>
+      </div>
+    </div>
+
+    <footer><%- include('../partials/footer'); %></footer>
+  </body>
+</html>
